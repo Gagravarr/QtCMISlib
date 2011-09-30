@@ -1,10 +1,15 @@
 #include <QCoreApplication>
 #include <QTextStream>
 
+#include <qtcmislib.h>
+
 int main(int argc, char *argv[]) {
-	QCoreApplication a(argc, argv);
+   QCoreApplication a(argc, argv);
 
-	printf("Hello world!\n");
+   printf("Hello world!\n");
 
-	return 0;
+   // Create our connection
+   QtCMISlib cmis = QtCMISlib::QtCMISlib();
+
+   return 0;
 }

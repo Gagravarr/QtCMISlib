@@ -5,7 +5,6 @@
 #-------------------------------------------------
 
 QT       += network xml
-
 QT       -= gui
 
 TARGET = qtcmislib
