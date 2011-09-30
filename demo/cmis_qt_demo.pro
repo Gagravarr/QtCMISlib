@@ -6,6 +6,7 @@ QT += network xml
 
 # Input
 SOURCES += demo.cpp
+HEADERS += demo.h
 
 # We depend on QtCMISLib
 INCLUDEPATH += .

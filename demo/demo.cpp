@@ -1,15 +1,24 @@
-#include <QCoreApplication>
-#include <QTextStream>
+#include <demo.h>
 
-#include <qtcmislib.h>
+Demo::Demo() {}
+void Demo::execute()
+{
+    printf("Hello world!\n");
+
+    // Create our QNetworkAccessManager
+    QNetworkAccessManager* nam = new QNetworkAccessManager(this);
+
+    // Create our connection
+    QtCMISlib cmis = QtCMISlib::QtCMISlib();
+    cmis.open(nam);
+}
+
 
 int main(int argc, char *argv[]) {
-   QCoreApplication a(argc, argv);
+   QCoreApplication app(argc, argv);
 
-   printf("Hello world!\n");
+   Demo demo;
+   QTimer::singleShot(0, &demo, SLOT(execute()));
 
-   // Create our connection
-   QtCMISlib cmis = QtCMISlib::QtCMISlib();
-
-   return 0;
+   return app.exec();
 }

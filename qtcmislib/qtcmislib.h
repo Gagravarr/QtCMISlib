@@ -10,10 +10,15 @@
 
 QNetworkAccessManager* nam;
 
-class QTCMISLIBSHARED_EXPORT QtCMISlib {
+class QTCMISLIBSHARED_EXPORT QtCMISlib
+{
 public:
     QtCMISlib();
     QtCMISlib(const QString & repository);
+    void open(QNetworkAccessManager* nam);
+private:
+    QString repository;
+    QNetworkAccessManager* nam;
 };
 
 #endif // QTCMISLIB_H
