@@ -14,8 +14,8 @@ class Demo : public QObject
 
 public:
     Demo();
-//public slots:
-//    void execute();
+public slots:
+    void execute();
 };
 
 #endif // CMIS_DEMO_H

@@ -4,19 +4,24 @@
 #include "qtcmislib_global.h"
 
 #include <QNetworkAccessManager>
-#include <QUrl>
 #include <QNetworkRequest>
 #include <QNetworkReply>
+#include <QUrl>
+
+#include <QObject>
 
 QNetworkAccessManager* nam;
 
-class QTCMISLIBSHARED_EXPORT QtCMISlib
+class QTCMISLIBSHARED_EXPORT QtCMISlib : public QObject
 {
+    Q_OBJECT 
+
 public:
     QtCMISlib();
     QtCMISlib(const QString & repository);
     void open(QNetworkAccessManager* nam);
 private:
+    void init(const QString & repository);
     QString repository;
     QNetworkAccessManager* nam;
 };

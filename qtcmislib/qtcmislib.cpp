@@ -1,14 +1,17 @@
 #include "qtcmislib.h"
 #include <iostream>
 
-QtCMISlib::QtCMISlib()
+QtCMISlib::QtCMISlib() : QObject()
 {
     // Default is to talk to a local Alfresco install
-    QtCMISlib::QtCMISlib(
-         "http://localhost:8080/alfresco/service/api/cmis"
-    );
+    init( "http://localhost:8080/alfresco/service/api/cmis" );
 }
-QtCMISlib::QtCMISlib(const QString & repo)
+QtCMISlib::QtCMISlib(const QString & repo) : QObject()
+{
+    init(repo);
+}
+
+void QtCMISlib::init(const QString & repo)
 {
     repository = repo;
     std::cout << "Repo is " + repository.toStdString() + "\n";
