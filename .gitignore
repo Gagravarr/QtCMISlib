@@ -7,5 +7,5 @@ demo/demo
 demo/Makefile
 demo/moc_*.cpp
 
-cmislib/Makefile
-cmislib/moc_*.cpp
+qtcmislib/Makefile
+qtcmislib/moc_*.cpp
