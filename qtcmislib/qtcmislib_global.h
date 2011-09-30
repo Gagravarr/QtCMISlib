@@ -1,0 +1,12 @@
+#ifndef QTCMISLIB_GLOBAL_H
+#define QTCMISLIB_GLOBAL_H
+
+#include <QtCore/qglobal.h>
+
+#if defined(QTCMISLIB_LIBRARY)
+#  define QTCMISLIBSHARED_EXPORT Q_DECL_EXPORT
+#else
+#  define QTCMISLIBSHARED_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif // QTCMISLIB_GLOBAL_H
