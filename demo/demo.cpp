@@ -9,7 +9,7 @@ void Demo::execute()
     QNetworkAccessManager* nm = new QNetworkAccessManager(this);
 
     // Create our connection
-    QtCMISlib cmis = QtCMISlib::QtCMISlib();
+    QtCMISlib cmis;
     cmis.open(nm);
 }
 

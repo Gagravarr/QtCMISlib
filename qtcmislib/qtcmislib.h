@@ -10,9 +10,7 @@
 
 #include <QObject>
 
-QNetworkAccessManager* nam;
-
-class QTCMISLIBSHARED_EXPORT QtCMISlib : public QObject
+class QTCMISLIBSHARED_EXPORT QtCMISlib : protected QObject
 {
     Q_OBJECT 
 
@@ -20,8 +18,11 @@ public:
     QtCMISlib();
     QtCMISlib(const QString & repository);
     void open(QNetworkAccessManager* nam);
+
+public slots:
+    void requestFinishedSlot(QNetworkReply* reply);
+
 private:
-    void init(const QString & repository);
     QString repository;
     QNetworkAccessManager* nam;
 };
