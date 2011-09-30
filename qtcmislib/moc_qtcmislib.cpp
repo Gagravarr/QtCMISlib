@@ -1,7 +1,7 @@
 /****************************************************************************
 ** Meta object code from reading C++ file 'qtcmislib.h'
 **
-** Created: Fri Sep 30 21:33:53 2011
+** Created: Fri Sep 30 22:09:16 2011
 **      by: The Qt Meta Object Compiler version 62 (Qt 4.6.2)
 **
 ** WARNING! All changes made in this file will be lost!
@@ -31,13 +31,13 @@ static const uint qt_meta_data_QtCMISlib[] = {
        0,       // signalCount
 
  // slots: signature, parameters, type, tag, flags
-      17,   11,   10,   10, 0x0a,
+      11,   10,   10,   10, 0x08,
 
        0        // eod
 };
 
 static const char qt_meta_stringdata_QtCMISlib[] = {
-    "QtCMISlib\0\0reply\0requestFinishedSlot(QNetworkReply*)\0"
+    "QtCMISlib\0\0getRepositoriesCompleted()\0"
 };
 
 const QMetaObject QtCMISlib::staticMetaObject = {
@@ -69,7 +69,7 @@ int QtCMISlib::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
         switch (_id) {
-        case 0: requestFinishedSlot((*reinterpret_cast< QNetworkReply*(*)>(_a[1]))); break;
+        case 0: getRepositoriesCompleted(); break;
         default: ;
         }
         _id -= 1;

@@ -2,4 +2,10 @@
 *.o
 *.so
 *.so.*
+
 demo/demo
+demo/Makefile
+demo/moc_*.cpp
+
+cmislib/Makefile
+cmislib/moc_*.cpp
