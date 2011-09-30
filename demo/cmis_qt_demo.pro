@@ -13,9 +13,3 @@ INCLUDEPATH += ../qtcmislib/
 
 PRE_TARGETDEPS = ../qtcmislib/libqtcmislib.so
 LIBS += ../qtcmislib/libqtcmislib.so
-
-QtCMISLib.target = ../qtcmislib/libqtcmislib.so
-QtCMISLib.command = cd ../qtcmislib/ && make
-QtCMISLib.depends = ../qtcmislib/Makefile
-
-QMAKE_EXTRA_TARGETS += QtCMISLib
