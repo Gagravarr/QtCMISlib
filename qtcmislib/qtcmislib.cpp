@@ -5,7 +5,7 @@
 QtCMISlib::QtCMISlib() : QObject()
 {
     // Default is to talk to a local Alfresco install
-    QtCMISlib::QtCMISlib( 
+    init(
         "http://localhost:8080/alfresco/service/api/cmis",
         "admin", "admin"
     );
@@ -13,16 +13,28 @@ QtCMISlib::QtCMISlib() : QObject()
 QtCMISlib::QtCMISlib(const QString & repo, const QString & user, 
                      const QString & pass) : QObject()
 {
+    init(repo, user, pass);
+}
+void QtCMISlib::init(const QString & repo, const QString & user, 
+                     const QString & pass)
+{
     repository = repo;
     // TODO Stash user details somewhere helpful
+
+    // Create our Network Manager
     nam = new QNetworkAccessManager(this);
 
+    // Bit of debugging for now
     std::cout << "Repo is " + repository.toStdString() + "\n";
 }
 
-void QtCMISlib::open(QNetworkAccessManager* manager)
+void QtCMISlib::open()
 {
 //    nam = manager;
+std::cout << "NAM is ";
+std::cout << nam;
+std::cout << "\n";
+std::cout << "Repo is " + repository.toStdString() + "\n";
 
     QNetworkRequest request;
     request.setUrl(QUrl(repository));

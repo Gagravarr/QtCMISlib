@@ -8,6 +8,9 @@ QT += network xml
 SOURCES += demo.cpp
 HEADERS += demo.h
 
+# When debugging
+QMAKE_CXXFLAGS = -g
+
 # We depend on QtCMISLib
 INCLUDEPATH += .
 INCLUDEPATH += ../qtcmislib/

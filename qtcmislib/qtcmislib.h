@@ -33,7 +33,7 @@ public:
     QtCMISlib();
     QtCMISlib(const QString & repository, const QString & username,
               const QString & password);
-    void open(QNetworkAccessManager* nam);
+    void open();
 
     void getRepositories();
 
@@ -41,6 +41,9 @@ private slots:
     void getRepositoriesCompleted();
 
 private:
+    void init(const QString & repository, const QString & username,
+              const QString & password);
+
     QString repository;
     QNetworkAccessManager* nam;
 };

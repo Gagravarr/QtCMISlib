@@ -10,3 +10,6 @@ SOURCES += qtcmislib.cpp
 
 HEADERS += qtcmislib.h\
         qtcmislib_global.h
+
+# When debugging
+QMAKE_CXXFLAGS = -g

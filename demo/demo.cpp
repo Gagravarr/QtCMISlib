@@ -5,12 +5,9 @@ void Demo::execute()
 {
     printf("Hello world!\n");
 
-    // Create our QNetworkAccessManager
-//    QNetworkAccessManager* nm = new QNetworkAccessManager(this);
-
     // Create our connection
     QtCMISlib cmis;
-    cmis.open(0);
+    cmis.open();
 }
 
 
