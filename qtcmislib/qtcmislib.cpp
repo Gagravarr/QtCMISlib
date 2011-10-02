@@ -75,8 +75,12 @@ void QtCMISlib::authenticationRequired(QNetworkReply* reply,
 
 void QtCMISlib::handleError(QNetworkReply::NetworkError error)
 {
+   // Grab the request the triggered it
    QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
 
-   qDebug("Error requesting %d:", error);
-   qDebug() << reply->errorString();
+   // Tell our clients that something broke...
+   emit networkError(reply, error);
+
+   // Debugging just in case
+   qDebug("Hit error on request: %d:", error);
 }

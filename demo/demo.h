@@ -16,6 +16,8 @@ public:
     Demo();
 public slots:
     void execute();
+    void handleNetworkError(QNetworkReply* reply,
+                            QNetworkReply::NetworkError error);
 };
 
 #endif // CMIS_DEMO_H

@@ -26,7 +26,7 @@ const QString CMIS_ACL_TYPE = "application/cmisacl+xml";
 
 
 // Main class
-class QTCMISLIBSHARED_EXPORT QtCMISlib : protected QObject
+class QTCMISLIBSHARED_EXPORT QtCMISlib : public QObject
 {
     Q_OBJECT 
 
@@ -37,6 +37,10 @@ public:
     void open();
 
     void getRepositories();
+
+signals:
+    void networkError(QNetworkReply* reply,
+                      QNetworkReply::NetworkError error);
 
 private slots:
     void getRepositoriesCompleted();

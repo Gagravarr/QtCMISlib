@@ -1,11 +1,6 @@
 #include <demo.h>
 
-// While testing
-#include <QNetworkAccessManager>
-#include <QNetworkRequest>
-#include <QNetworkReply>
-#include <QUrl>
-
+#include <QtDebug>
 
 Demo::Demo() {}
 void Demo::execute()
@@ -13,19 +8,19 @@ void Demo::execute()
     printf("Hello world!\n");
 
     // Create our connection
-    QtCMISlib cmis;
-    cmis.open();
+    QtCMISlib* cmis = new QtCMISlib();
+    connect(cmis, SIGNAL(networkError(QNetworkReply*,QNetworkReply::NetworkError)),
+            this, SLOT(handleNetworkError(QNetworkReply*,QNetworkReply::NetworkError)));
 
-//QNetworkAccessManager* nam = new QNetworkAccessManager(this);
-//QNetworkRequest request;
-//request.setUrl(QUrl("http://localhost:8080/alfresco/service/api/cmis"));
-//
-//QNetworkReply *reply = nam->get(request);
-//
-//QEventLoop loop;
-//QObject::connect(reply, SIGNAL(readyRead()), &loop, SLOT(quit()));
-//loop.exec();
-//printf("Done waiting\n");
+    // Have it connect
+    cmis->open();
+}
+
+void Demo::handleNetworkError(QNetworkReply* reply,
+                              QNetworkReply::NetworkError error)
+{
+     qDebug("Error requesting %d:", error);
+     qDebug() << reply->errorString();
 }
 
 
