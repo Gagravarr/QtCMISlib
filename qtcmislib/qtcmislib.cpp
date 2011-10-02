@@ -1,6 +1,7 @@
 #include "qtcmislib.h"
 #include <iostream>
 #include <QEventLoop>
+#include <QtDebug>
 
 QtCMISlib::QtCMISlib() : QObject()
 {
@@ -38,10 +39,14 @@ std::cout << "Repo is " + repository.toStdString() + "\n";
 
     QNetworkRequest request;
     request.setUrl(QUrl(repository));
+    request.setRawHeader("User-Agent", "QtCMISlib 0.1");
 
     QNetworkReply *reply = nam->get(request);
     connect(reply, SIGNAL(readyRead()),
             this, SLOT(getRepositoriesCompleted()));
+    connect(reply, SIGNAL(error(QNetworkReply::NetworkError)),
+            this, SLOT(handleError(QNetworkReply::NetworkError)));
+
 
 QEventLoop loop;
 QObject::connect(reply, SIGNAL(readyRead()), &loop, SLOT(quit()));
@@ -59,4 +64,19 @@ void QtCMISlib::getRepositoriesCompleted()
    std::cout << "Got details back\n";
    QByteArray data = reply->readAll();
 
+}
+
+void QtCMISlib::authenticationRequired(QNetworkReply* reply, 
+                                       QAuthenticator* authenticator)
+{
+   authenticator->setUser("admin"); // TODO Fix
+   authenticator->setPassword("admin"); // TODO Fix
+}
+
+void QtCMISlib::handleError(QNetworkReply::NetworkError error)
+{
+   QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
+
+   qDebug("Error requesting %d:", error);
+   qDebug() << reply->errorString();
 }

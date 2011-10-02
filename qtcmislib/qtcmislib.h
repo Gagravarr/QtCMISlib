@@ -4,6 +4,7 @@
 #include "qtcmislib_global.h"
 
 #include <QNetworkAccessManager>
+#include <QAuthenticator>
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QUrl>
@@ -39,6 +40,10 @@ public:
 
 private slots:
     void getRepositoriesCompleted();
+
+    void authenticationRequired(QNetworkReply* reply, 
+                                QAuthenticator* authenticator);
+    void handleError(QNetworkReply::NetworkError error);
 
 private:
     void init(const QString & repository, const QString & username,
