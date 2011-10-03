@@ -8,6 +8,7 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QUrl>
+#include <QXmlReader>
 
 #include <QObject>
 
@@ -59,12 +60,35 @@ private:
     QNetworkAccessManager* nam;
 };
 
-//class QTCMISLIBSHARED_EXPORT QtCMISRepo : protected QObject
-//{
-//    Q_OBJECT 
-//
-//public:
-//    QtCMISRepo();
-//}
+class QTCMISLIBSHARED_EXPORT QtCMISRepositoryInfo : protected QObject
+{
+    Q_OBJECT 
+
+public:
+    QString repositoryId;
+    QString repositoryName;
+    QString vendorName;
+    QString productName;
+    QString productVersion;
+    QString rootFolderId;
+    // TODO Capabilities
+    // TODO ACL Capabilities
+    QString specificationTitle;
+    double versionSupported;
+
+private:
+    QtCMISRepositoryInfo();
+};
+
+class QTCMISLIBSHARED_EXPORT QtCMISRepository : protected QObject
+{
+    Q_OBJECT 
+
+public:
+    QtCMISRepositoryInfo info;
+
+private:
+    QtCMISRepository();
+};
 
 #endif // QTCMISLIB_H

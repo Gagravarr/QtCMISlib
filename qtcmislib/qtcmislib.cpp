@@ -57,9 +57,11 @@ void QtCMISlib::getRepositories()
 void QtCMISlib::getRepositoriesCompleted()
 {
    QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
-   std::cout << "Got details back\n";
+   qDebug("Got repository info from %s",
+          reply->request().url().toString().toStdString().c_str());
    QByteArray data = reply->readAll();
 
+   //QXmlReader* r = new QXmlReader();
 
    // Tidy up
    reply->deleteLater();
