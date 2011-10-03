@@ -13,6 +13,7 @@
 #include <QDomElement>
 
 #include <QObject>
+#include <QList>
 
 // Namespaces
 const QString ATOM_NS = "http://www.w3.org/2005/Atom";
@@ -46,7 +47,8 @@ public:
     double versionSupported;
 
 private:
-    QtCMISRepositoryInfo();
+    QtCMISRepositoryInfo(QDomElement infoElement);
+    friend class QtCMISRepository;
 };
 
 // A Repository
@@ -55,10 +57,11 @@ class QTCMISLIBSHARED_EXPORT QtCMISRepository : protected QObject
     Q_OBJECT 
 
 public:
-    QtCMISRepositoryInfo info;
+    QtCMISRepositoryInfo* info;
 
 private:
-    QtCMISRepository();
+    QtCMISRepository(QDomElement workspaceElement);
+    friend class QtCMISlib;
 };
 
 // The Main Library class
@@ -68,16 +71,18 @@ class QTCMISLIBSHARED_EXPORT QtCMISlib : public QObject
 
 public:
     QtCMISlib();
-    QtCMISlib(const QString & repository, const QString & username,
+    QtCMISlib(const QString & repositoryUrl, const QString & username,
               const QString & password);
     void open();
 
-    void getRepositories();
+    QList<QtCMISRepository*> getRepositories();
+    QtCMISRepository* getRepository(QString repositoryId);
 
 signals:
     void networkError(QNetworkReply* reply,
                       QNetworkReply::NetworkError error);
     void xmlError(QNetworkReply* reply, QString error);
+    void openCompleted();
 
 private slots:
     void getRepositoriesCompleted();
@@ -87,13 +92,15 @@ private slots:
     void handleError(QNetworkReply::NetworkError error);
 
 private:
-    void init(const QString & repository, const QString & username,
+    void init(const QString & repositoryUrl, const QString & username,
               const QString & password);
 
-    QString repository;
+    QString repositoryUrl;
     QString username;
     QString password;
     QNetworkAccessManager* nam;
+
+    QList<QtCMISRepository*> repositories;
 };
 
 #endif // QTCMISLIB_H

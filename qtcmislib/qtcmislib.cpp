@@ -11,16 +11,16 @@ QtCMISlib::QtCMISlib() : QObject()
         "admin", "admin"
     );
 }
-QtCMISlib::QtCMISlib(const QString & repo, const QString & user, 
+QtCMISlib::QtCMISlib(const QString & repositoryUrl, const QString & user, 
                      const QString & pass) : QObject()
 {
-    init(repo, user, pass);
+    init(repositoryUrl, user, pass);
 }
-void QtCMISlib::init(const QString & repository, const QString & username, 
+void QtCMISlib::init(const QString & repositoryUrl, const QString & username, 
                      const QString & password)
 {
     // Save the connection details
-    this->repository = repository;
+    this->repositoryUrl = repositoryUrl;
     this->username = username;
     this->password = password;
 
@@ -32,7 +32,7 @@ void QtCMISlib::init(const QString & repository, const QString & username,
             this,SLOT(authenticationRequired(QNetworkReply*,QAuthenticator*)));
 
     // Bit of debugging for now
-    qDebug("Repo is %s", repository.toStdString().c_str());
+    qDebug("Repo is %s", repositoryUrl.toStdString().c_str());
 }
 
 void QtCMISlib::open()
@@ -40,7 +40,7 @@ void QtCMISlib::open()
     qDebug("Fetching core repo details");
 
     QNetworkRequest request;
-    request.setUrl(QUrl(repository));
+    request.setUrl(QUrl(repositoryUrl));
     request.setRawHeader("User-Agent", "QtCMISlib 0.1");
 
     QNetworkReply *reply = nam->get(request);
@@ -50,8 +50,18 @@ void QtCMISlib::open()
             this, SLOT(handleError(QNetworkReply::NetworkError)));
 }
 
-void QtCMISlib::getRepositories()
+QList<QtCMISRepository*> QtCMISlib::getRepositories()
 {
+   return repositories;
+}
+QtCMISRepository* QtCMISlib::getRepository(QString repositoryId)
+{
+   foreach (QtCMISRepository* repo, repositories)
+   {
+      if(repo->info->repositoryId == repositoryId) 
+          return repo;
+   }
+   return NULL;
 }
 
 void QtCMISlib::getRepositoriesCompleted()
@@ -75,6 +85,18 @@ void QtCMISlib::getRepositoriesCompleted()
 
    // Build up the list of Repositories in the reply
    QDomNodeList workspaces = svc.elementsByTagNameNS(APP_NS, "workspace");
+   if(workspaces.size() == 0) 
+   {
+      emit xmlError(reply, QString("No workspaces found"));
+   }
+   for(int i=0; i<workspaces.count(); i++)
+   {
+      QDomElement workspace = workspaces.at(i).toElement();
+      repositories.append(new QtCMISRepository(workspace));
+   }
+
+   // Indicate we're done
+   emit openCompleted();
 
    // Tidy up
    reply->deleteLater();
@@ -100,4 +122,16 @@ void QtCMISlib::handleError(QNetworkReply::NetworkError error)
 
    // Tidy up
    reply->deleteLater();
+}
+
+
+QtCMISRepository::QtCMISRepository(QDomElement workspaceElement)
+{
+   info = new QtCMISRepositoryInfo(workspaceElement); // TODO Correct
+}
+
+
+QtCMISRepositoryInfo::QtCMISRepositoryInfo(QDomElement infoElement)
+{
+   // TODO
 }

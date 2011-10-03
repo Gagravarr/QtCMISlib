@@ -13,6 +13,7 @@ void Demo::execute()
             this, SLOT(handleNetworkError(QNetworkReply*,QNetworkReply::NetworkError)));
     connect(cmis, SIGNAL(xmlError(QNetworkReply*,QString)),
             this, SLOT(handleXmlError(QNetworkReply*,QString)));
+    // TODO Open Complete slot
 
     // Have it connect
     cmis->open();
