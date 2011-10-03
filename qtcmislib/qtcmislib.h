@@ -47,7 +47,7 @@ public:
     double versionSupported;
 
 private:
-    QtCMISRepositoryInfo(QDomElement infoElement);
+    QtCMISRepositoryInfo(QDomElement* infoElement);
     friend class QtCMISRepository;
 };
 
@@ -60,7 +60,7 @@ public:
     QtCMISRepositoryInfo* info;
 
 private:
-    QtCMISRepository(QDomElement workspaceElement);
+    QtCMISRepository(QDomElement* workspaceElement);
     friend class QtCMISlib;
 };
 
@@ -94,9 +94,6 @@ private slots:
 private:
     void init(const QString & repositoryUrl, const QString & username,
               const QString & password);
-    void triggerXmlError(QNetworkReply* reply, QString error);
-    friend class QtCMISRepository;
-    friend class QtCMISRepositoryInfo;
 
     QString repositoryUrl;
     QString username;

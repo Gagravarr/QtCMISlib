@@ -1,5 +1,6 @@
 #include "qtcmislib.h"
 #include <iostream>
+#include <stdexcept>
 #include <QEventLoop>
 #include <QtDebug>
 
@@ -96,7 +97,15 @@ void QtCMISlib::getRepositoriesCompleted()
    for(int i=0; i<workspaces.count(); i++)
    {
       QDomElement workspace = workspaces.at(i).toElement();
-      repositories.append(new QtCMISRepository(workspace));
+      try
+      {
+         QtCMISRepository* repo = new QtCMISRepository(&workspace);
+         repositories.append(repo);
+      }
+      catch(std::runtime_error e)
+      {
+         emit xmlError(reply, QString(e.what()));
+      }
    }
 
    // Indicate we're done
@@ -128,25 +137,35 @@ void QtCMISlib::handleError(QNetworkReply::NetworkError error)
    reply->deleteLater();
 }
 
-void QtCMISlib::triggerXmlError(QNetworkReply* reply, QString error)
+
+QtCMISRepository::QtCMISRepository(QDomElement* we)
 {
-   emit xmlError(reply, error);
+   // Check
+   if(we == NULL)
+   {
+     throw std::runtime_error("<workspace> element must be supplied");
+   }
+
+   // Build the Info object
+for(int i=0; i<we->childNodes().count(); i++) {
+qDebug() << we->childNodes().at(i).localName();
+qDebug() << we->childNodes().at(i).namespaceURI();
 }
 
-
-QtCMISRepository::QtCMISRepository(QDomElement we)
-{
-   // Build the Info object
-   QDomNodeList infoList = we.elementsByTagNameNS(CMISRA_NS, "repositoryInfo");
-   
-
-   info = new QtCMISRepositoryInfo(we); // TODO Correct
+   QDomNodeList infoList = we->elementsByTagNameNS(CMISRA_NS, "repositoryInfo");
+   if(infoList.count() != 1)
+   {
+      QString error = QString("Incorrect number of repositoryInfo elements, should be 1 but found %1").arg(infoList.count());
+      throw std::range_error(error.toStdString().c_str());
+   }
+   QDomElement infoElement = infoList.at(0).toElement();
+   info = new QtCMISRepositoryInfo(&infoElement);
 
    // TODO Build the rest
 }
 
 
-QtCMISRepositoryInfo::QtCMISRepositoryInfo(QDomElement infoElement)
+QtCMISRepositoryInfo::QtCMISRepositoryInfo(QDomElement* infoElement)
 {
    // TODO
 }
