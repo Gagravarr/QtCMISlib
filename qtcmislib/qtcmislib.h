@@ -8,7 +8,9 @@
 #include <QNetworkRequest>
 #include <QNetworkReply>
 #include <QUrl>
-#include <QXmlReader>
+
+#include <QDomDocument>
+#include <QDomElement>
 
 #include <QObject>
 
@@ -26,40 +28,7 @@ const QString CMIS_QUERY_TYPE = "application/cmisquery+xml";
 const QString CMIS_ACL_TYPE = "application/cmisacl+xml";
 
 
-// Main class
-class QTCMISLIBSHARED_EXPORT QtCMISlib : public QObject
-{
-    Q_OBJECT 
-
-public:
-    QtCMISlib();
-    QtCMISlib(const QString & repository, const QString & username,
-              const QString & password);
-    void open();
-
-    void getRepositories();
-
-signals:
-    void networkError(QNetworkReply* reply,
-                      QNetworkReply::NetworkError error);
-
-private slots:
-    void getRepositoriesCompleted();
-
-    void authenticationRequired(QNetworkReply* reply, 
-                                QAuthenticator* authenticator);
-    void handleError(QNetworkReply::NetworkError error);
-
-private:
-    void init(const QString & repository, const QString & username,
-              const QString & password);
-
-    QString repository;
-    QString username;
-    QString password;
-    QNetworkAccessManager* nam;
-};
-
+// Info on a Repository
 class QTCMISLIBSHARED_EXPORT QtCMISRepositoryInfo : protected QObject
 {
     Q_OBJECT 
@@ -80,6 +49,7 @@ private:
     QtCMISRepositoryInfo();
 };
 
+// A Repository
 class QTCMISLIBSHARED_EXPORT QtCMISRepository : protected QObject
 {
     Q_OBJECT 
@@ -89,6 +59,41 @@ public:
 
 private:
     QtCMISRepository();
+};
+
+// The Main Library class
+class QTCMISLIBSHARED_EXPORT QtCMISlib : public QObject
+{
+    Q_OBJECT 
+
+public:
+    QtCMISlib();
+    QtCMISlib(const QString & repository, const QString & username,
+              const QString & password);
+    void open();
+
+    void getRepositories();
+
+signals:
+    void networkError(QNetworkReply* reply,
+                      QNetworkReply::NetworkError error);
+    void xmlError(QNetworkReply* reply, QString error);
+
+private slots:
+    void getRepositoriesCompleted();
+
+    void authenticationRequired(QNetworkReply* reply, 
+                                QAuthenticator* authenticator);
+    void handleError(QNetworkReply::NetworkError error);
+
+private:
+    void init(const QString & repository, const QString & username,
+              const QString & password);
+
+    QString repository;
+    QString username;
+    QString password;
+    QNetworkAccessManager* nam;
 };
 
 #endif // QTCMISLIB_H

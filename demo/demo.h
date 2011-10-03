@@ -14,10 +14,13 @@ class Demo : public QObject
 
 public:
     Demo();
+signals:
+    void exit();
 public slots:
     void execute();
     void handleNetworkError(QNetworkReply* reply,
                             QNetworkReply::NetworkError error);
+    void handleXmlError(QNetworkReply* reply, QString error);
 };
 
 #endif // CMIS_DEMO_H

@@ -7,7 +7,7 @@ QtCMISlib::QtCMISlib() : QObject()
 {
     // Default is to talk to a local Alfresco install
     init(
-        "http://localhost:8080/alfresco/service/api/cmis",
+        "http://localhost:8080/alfresco/s/cmis",
         "admin", "admin"
     );
 }
@@ -59,9 +59,22 @@ void QtCMISlib::getRepositoriesCompleted()
    QNetworkReply *reply = qobject_cast<QNetworkReply *>(sender());
    qDebug("Got repository info from %s",
           reply->request().url().toString().toStdString().c_str());
-   QByteArray data = reply->readAll();
 
-   //QXmlReader* r = new QXmlReader();
+   // Parse our XML
+   QDomDocument* xml = new QDomDocument();
+   xml->setContent(reply);
+
+   QDomElement svc = xml->documentElement();
+   if(svc.tagName() != "service")
+   {
+      QString error = QString("Invalid XML received, got ");
+      error.append(svc.tagName());
+      emit xmlError(reply, error);
+      return;
+   }
+
+   // Build up the list of Repositories in the reply
+   QDomNodeList workspaces = svc.elementsByTagNameNS(APP_NS, "workspace");
 
    // Tidy up
    reply->deleteLater();
