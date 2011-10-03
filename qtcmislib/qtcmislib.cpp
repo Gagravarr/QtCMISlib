@@ -87,6 +87,10 @@ void QtCMISlib::getRepositoriesCompleted()
    QDomNodeList workspaces = svc.elementsByTagNameNS(APP_NS, "workspace");
    if(workspaces.size() == 0) 
    {
+       workspaces = svc.elementsByTagName("workspace");
+   }
+   if(workspaces.size() == 0) 
+   {
       emit xmlError(reply, QString("No workspaces found"));
    }
    for(int i=0; i<workspaces.count(); i++)

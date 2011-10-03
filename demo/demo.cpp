@@ -1,11 +1,14 @@
 #include <demo.h>
 
 #include <QtDebug>
+#include <QEventLoop>
+#include <QTimer>
 
 Demo::Demo() {}
 void Demo::execute()
 {
-    printf("Hello world!\n");
+    QTextStream qout(stdout);
+    qout << "Hello world!" << endl;
 
     // Create our connection
     QtCMISlib* cmis = new QtCMISlib();
@@ -13,10 +16,33 @@ void Demo::execute()
             this, SLOT(handleNetworkError(QNetworkReply*,QNetworkReply::NetworkError)));
     connect(cmis, SIGNAL(xmlError(QNetworkReply*,QString)),
             this, SLOT(handleXmlError(QNetworkReply*,QString)));
-    // TODO Open Complete slot
 
     // Have it connect
     cmis->open();
+
+    // Wait for it to load
+    QEventLoop wait;
+    connect(cmis, SIGNAL(openCompleted()), &wait, SLOT(quit()));
+    wait.exec();
+
+    // Report what we found
+    QList<QtCMISRepository*> repos = cmis->getRepositories();
+
+    qout << endl;
+    qout << "Found " << repos.count() << " Repositories" << endl;
+    for(int i=0; i<repos.count(); i++)
+    {
+       QtCMISRepository* repo = repos.at(i);
+       qout << " Repository " << (i+1) << endl;
+       qout << "   ID: " << repo->info->repositoryId << endl;
+       qout << "   Name: " << repo->info->repositoryName << endl;
+       qout << "   Vendor: " << repo->info->vendorName << endl;
+       qout << "   Product: " << repo->info->productName << endl;
+       qout << "   Version: " << repo->info->productVersion << endl;
+    }
+
+    // All done
+    emit exit();
 }
 
 void Demo::handleNetworkError(QNetworkReply* reply,

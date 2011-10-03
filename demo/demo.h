@@ -2,8 +2,6 @@
 #define CMIS_DEMO_H
 
 #include <QCoreApplication>
-#include <QTextStream>
-#include <QTimer>
 
 #include <qtcmislib.h>
 #include <stdio.h>
