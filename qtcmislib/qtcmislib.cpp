@@ -16,42 +16,38 @@ QtCMISlib::QtCMISlib(const QString & repo, const QString & user,
 {
     init(repo, user, pass);
 }
-void QtCMISlib::init(const QString & repo, const QString & user, 
-                     const QString & pass)
+void QtCMISlib::init(const QString & repository, const QString & username, 
+                     const QString & password)
 {
-    repository = repo;
-    // TODO Stash user details somewhere helpful
+    // Save the connection details
+    this->repository = repository;
+    this->username = username;
+    this->password = password;
 
     // Create our Network Manager
     nam = new QNetworkAccessManager(this);
 
+    // Wire up the authentication needed handler
+    connect(nam,SIGNAL(authenticationRequired(QNetworkReply*,QAuthenticator*)),
+            this,SLOT(authenticationRequired(QNetworkReply*,QAuthenticator*)));
+
     // Bit of debugging for now
-    std::cout << "Repo is " + repository.toStdString() + "\n";
+    qDebug("Repo is %s", repository.toStdString().c_str());
 }
 
 void QtCMISlib::open()
 {
-//    nam = manager;
-std::cout << "NAM is ";
-std::cout << nam;
-std::cout << "\n";
-std::cout << "Repo is " + repository.toStdString() + "\n";
+    qDebug("Fetching core repo details");
 
     QNetworkRequest request;
     request.setUrl(QUrl(repository));
     request.setRawHeader("User-Agent", "QtCMISlib 0.1");
 
     QNetworkReply *reply = nam->get(request);
-    connect(reply, SIGNAL(readyRead()),
+    connect(reply, SIGNAL(finished()),
             this, SLOT(getRepositoriesCompleted()));
     connect(reply, SIGNAL(error(QNetworkReply::NetworkError)),
             this, SLOT(handleError(QNetworkReply::NetworkError)));
-
-
-QEventLoop loop;
-QObject::connect(reply, SIGNAL(readyRead()), &loop, SLOT(quit()));
-loop.exec();
-std::cout << "Done waiting\n";
 }
 
 void QtCMISlib::getRepositories()
@@ -64,13 +60,16 @@ void QtCMISlib::getRepositoriesCompleted()
    std::cout << "Got details back\n";
    QByteArray data = reply->readAll();
 
+
+   // Tidy up
+   reply->deleteLater();
 }
 
 void QtCMISlib::authenticationRequired(QNetworkReply* reply, 
                                        QAuthenticator* authenticator)
 {
-   authenticator->setUser("admin"); // TODO Fix
-   authenticator->setPassword("admin"); // TODO Fix
+   authenticator->setUser(username);
+   authenticator->setPassword(password);
 }
 
 void QtCMISlib::handleError(QNetworkReply::NetworkError error)
@@ -83,4 +82,7 @@ void QtCMISlib::handleError(QNetworkReply::NetworkError error)
 
    // Debugging just in case
    qDebug("Hit error on request: %d:", error);
+
+   // Tidy up
+   reply->deleteLater();
 }

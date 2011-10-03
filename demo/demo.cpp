@@ -19,8 +19,11 @@ void Demo::execute()
 void Demo::handleNetworkError(QNetworkReply* reply,
                               QNetworkReply::NetworkError error)
 {
-     qDebug("Error requesting %d:", error);
-     qDebug() << reply->errorString();
+    qDebug("Error requesting %d:", error);
+    qDebug() << reply->errorString();
+
+    // TODO Should we always bail out at errors?
+    
 }
 
 

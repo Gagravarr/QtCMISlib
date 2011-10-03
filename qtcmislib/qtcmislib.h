@@ -54,6 +54,8 @@ private:
               const QString & password);
 
     QString repository;
+    QString username;
+    QString password;
     QNetworkAccessManager* nam;
 };
 
