@@ -128,10 +128,21 @@ void QtCMISlib::handleError(QNetworkReply::NetworkError error)
    reply->deleteLater();
 }
 
-
-QtCMISRepository::QtCMISRepository(QDomElement workspaceElement)
+void QtCMISlib::triggerXmlError(QNetworkReply* reply, QString error)
 {
-   info = new QtCMISRepositoryInfo(workspaceElement); // TODO Correct
+   emit xmlError(reply, error);
+}
+
+
+QtCMISRepository::QtCMISRepository(QDomElement we)
+{
+   // Build the Info object
+   QDomNodeList infoList = we.elementsByTagNameNS(CMISRA_NS, "repositoryInfo");
+   
+
+   info = new QtCMISRepositoryInfo(we); // TODO Correct
+
+   // TODO Build the rest
 }
 
 
