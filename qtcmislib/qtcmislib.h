@@ -36,6 +36,7 @@ const QString ATOM_NS = "http://www.w3.org/2005/Atom";
 const QString APP_NS  = "http://www.w3.org/2007/app";
 const QString CMISRA_NS = "http://docs.oasis-open.org/ns/cmis/restatom/200908/";
 const QString CMIS_NS   = "http://docs.oasis-open.org/ns/cmis/core/200908/";
+const QString ALFRESCO_NS = "http://www.alfresco.org";
 
 // Content Types
 const QString ATOM_XML_TYPE = "application/atom+xml";

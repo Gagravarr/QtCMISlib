@@ -55,6 +55,10 @@ void Demo::execute()
        qout << "   Vendor: " << repo->info->vendorName << endl;
        qout << "   Product: " << repo->info->productName << endl;
        qout << "   Version: " << repo->info->productVersion << endl;
+       qout << endl;
+       qout << "   Root Folder ID: " << repo->info->rootFolderId << endl;
+       qout << "   Specification: " << repo->info->specificationTitle << 
+                              " @ " << repo->info->versionSupported << endl;
     }
 
     // All done

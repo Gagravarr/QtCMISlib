@@ -20,6 +20,22 @@
 #include <QEventLoop>
 #include <QtDebug>
 
+QString getValueOrNull(QDomElement* parent, QString ns, QString tag)
+{
+   QDomNodeList tagList = parent->elementsByTagNameNS(ns, tag);
+   if(tagList.count() == 0) {
+      return NULL;
+   }
+   if(tagList.count() > 1) {
+      QString error = QString("Incorrect number of %1 elements, should be 1 but found %2").
+                          arg(tag).arg(tagList.count());
+      throw std::range_error(error.toStdString().c_str());
+   }
+
+   QDomElement element = tagList.at(0).toElement();
+   return element.text();
+}
+
 QtCMISlib::QtCMISlib() : QObject()
 {
     // Default is to talk to a local Alfresco install
@@ -89,7 +105,7 @@ void QtCMISlib::getRepositoriesCompleted()
 
    // Parse our XML
    QDomDocument* xml = new QDomDocument();
-   xml->setContent(reply);
+   xml->setContent(reply, true);
 
    QDomElement svc = xml->documentElement();
    if(svc.tagName() != "service")
@@ -163,15 +179,10 @@ QtCMISRepository::QtCMISRepository(QDomElement* we)
    }
 
    // Build the Info object
-for(int i=0; i<we->childNodes().count(); i++) {
-qDebug() << we->childNodes().at(i).localName();
-qDebug() << we->childNodes().at(i).namespaceURI();
-}
-
    QDomNodeList infoList = we->elementsByTagNameNS(CMISRA_NS, "repositoryInfo");
-   if(infoList.count() != 1)
-   {
-      QString error = QString("Incorrect number of repositoryInfo elements, should be 1 but found %1").arg(infoList.count());
+   if(infoList.count() != 1) {
+      QString error = QString("Incorrect number of repositoryInfo elements, should be 1 but found %1").
+                          arg(infoList.count());
       throw std::range_error(error.toStdString().c_str());
    }
    QDomElement infoElement = infoList.at(0).toElement();
@@ -183,5 +194,21 @@ qDebug() << we->childNodes().at(i).namespaceURI();
 
 QtCMISRepositoryInfo::QtCMISRepositoryInfo(QDomElement* infoElement)
 {
-   // TODO
+   // Grab the common parts
+   repositoryId = getValueOrNull(infoElement, CMIS_NS, "repositoryId");
+   repositoryName = getValueOrNull(infoElement, CMIS_NS, "repositoryName");
+   vendorName = getValueOrNull(infoElement, CMIS_NS, "vendorName");
+   productName = getValueOrNull(infoElement, CMIS_NS, "productName");
+   productVersion = getValueOrNull(infoElement, CMIS_NS, "productVersion");
+   rootFolderId = getValueOrNull(infoElement, CMIS_NS, "rootFolderId");
+   specificationTitle = getValueOrNull(infoElement, ALFRESCO_NS, "cmisSpecificationTitle");
+
+   QString versionSupportedS = getValueOrNull(infoElement, CMIS_NS, "cmisVersionSupported");
+   if(versionSupportedS == NULL) {
+     versionSupported = 0.0;
+   } else {
+     versionSupported = versionSupportedS.toDouble();
+   }
+
+   // TODO Build the rest
 }
