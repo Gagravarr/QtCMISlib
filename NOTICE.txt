@@ -1,0 +1,9 @@
+QtCMISlib
+Copyright 2011
+
+This product includes software developed at
+The Apache Software Foundation (http://www.apache.org/).
+
+This product depends on the Qt Framework from Nokia, which is
+under the GNU Lesser General Public License (LGPL) version 2.1. 
+See http://qt.nokia.com/products/licensing/ for details
