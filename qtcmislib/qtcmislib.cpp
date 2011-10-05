@@ -215,18 +215,3 @@ QtCMISRepositoryInfo::QtCMISRepositoryInfo(QDomElement* infoElement)
 
    // TODO Build the rest
 }
-
-QtCMISFolder::QtCMISFolder(QString objectId, QString name, QString title, QString childrenLink)
-    : QtCMISEntry(objectId, name, title)
-{
-   this->getChildrenLink = childrenLink;
-
-   // TODO
-}
-
-QtCMISEntry::QtCMISEntry(QString objectId, QString name, QString title)
-{
-   this->objectId = objectId;
-   this->name = name;
-   this->title = title;
-}

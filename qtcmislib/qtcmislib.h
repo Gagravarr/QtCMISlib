@@ -97,6 +97,10 @@ public:
     void getChildren();
     void getDescendents();
     void getTree();
+private slots:
+    void getChildrenCompleted(QList<QtCMISEntry*> children);
+    void getDescendentsCompleted(QList<QtCMISEntry*> children);
+    void getTreeCompleted(QList<QtCMISEntry*> children);
 
 signals:
     void childrenAvailable(QString type, QList<QtCMISEntry*> children);

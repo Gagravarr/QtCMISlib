@@ -25,9 +25,10 @@ TEMPLATE = lib
 
 DEFINES += QTCMISLIB_LIBRARY
 
-SOURCES += qtcmislib.cpp
+SOURCES += qtcmislib.cpp \
+        qtcmisentries.cpp
 
-HEADERS += qtcmislib.h\
+HEADERS += qtcmislib.h \
         qtcmislib_global.h
 
 # When debugging
