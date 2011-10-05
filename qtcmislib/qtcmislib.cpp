@@ -188,6 +188,9 @@ QtCMISRepository::QtCMISRepository(QDomElement* we)
    QDomElement infoElement = infoList.at(0).toElement();
    info = new QtCMISRepositoryInfo(&infoElement);
 
+   // Build the Root Folder object
+   rootFolder = new QtCMISFolder(info->rootFolderId, QString("root"), QString("root"), NULL);
+
    // TODO Build the rest
 }
 
@@ -211,4 +214,19 @@ QtCMISRepositoryInfo::QtCMISRepositoryInfo(QDomElement* infoElement)
    }
 
    // TODO Build the rest
+}
+
+QtCMISFolder::QtCMISFolder(QString objectId, QString name, QString title, QString childrenLink)
+    : QtCMISEntry(objectId, name, title)
+{
+   this->getChildrenLink = childrenLink;
+
+   // TODO
+}
+
+QtCMISEntry::QtCMISEntry(QString objectId, QString name, QString title)
+{
+   this->objectId = objectId;
+   this->name = name;
+   this->title = title;
 }

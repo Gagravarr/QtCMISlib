@@ -68,13 +68,64 @@ private:
     friend class QtCMISRepository;
 };
 
+// An Object (Folder or Document) in a Repository
+class QTCMISLIBSHARED_EXPORT QtCMISEntry : protected QObject
+{
+    Q_OBJECT
+
+protected:
+    QtCMISEntry(QString objectId, QString name, QString title);
+    friend class QtCMISRepository;
+
+public:
+    QString objectId;
+    QString name;
+    QString title;
+};
+
+// A Folder in a Repository
+class QTCMISLIBSHARED_EXPORT QtCMISFolder : public QtCMISEntry
+{
+    Q_OBJECT
+
+protected:
+    QtCMISFolder(QString objectId, QString name, QString title, QString childrenLink);
+    friend class QtCMISRepository;
+public:
+    void createFolder(QString name);
+    void createDocument(QString name, QByteArray data);
+    void getChildren();
+    void getDescendents();
+    void getTree();
+
+signals:
+    void childrenAvailable(QString type, QList<QtCMISEntry*> children);
+
+private:
+    QString getChildrenLink;
+};
+
+// A Document in a Repository
+class QTCMISLIBSHARED_EXPORT QtCMISDocument : public QtCMISEntry
+{
+    Q_OBJECT
+};
+
 // A Repository
 class QTCMISLIBSHARED_EXPORT QtCMISRepository : protected QObject
 {
     Q_OBJECT 
 
 public:
+    void getFolder(QString folderId);
+    void getObject(QString objectId);
+    void getObjectByPath(QString objectPath);
+
+    QtCMISFolder* rootFolder;
     QtCMISRepositoryInfo* info;
+
+signals:
+    void objectAvailable(QString objectId, QtCMISEntry* object);
 
 private:
     QtCMISRepository(QDomElement* workspaceElement);
